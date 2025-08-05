@@ -1,25 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Edit3, Plus, X, AlertTriangle } from 'lucide-react';
+import { Trash2, Edit3, Plus, X, AlertTriangle, Users } from 'lucide-react';
 
-// Service API adapté à votre backend
 class CharacterService {
   static API_BASE_URL = 'http://localhost:8080';
 
   static async getAllCharacters() {
     try {
-      console.log('🔄 Tentative de connexion à:', `${this.API_BASE_URL}/characters`);
+      console.log(' Tentative de connexion à:', `${this.API_BASE_URL}/characters`);
       const response = await fetch(`${this.API_BASE_URL}/characters`);
-      console.log('📡 Réponse reçue:', response.status, response.statusText);
+      console.log(' Réponse reçue:', response.status, response.statusText);
       
       if (!response.ok) {
         throw new Error(`Erreur HTTP: ${response.status} ${response.statusText}`);
       }
       
       const data = await response.json();
-      console.log('✅ Données reçues:', data);
+      console.log(' Données reçues:', data);
       return data;
     } catch (error) {
-      console.error('❌ Erreur dans getAllCharacters:', error);
+      console.error(' Erreur dans getAllCharacters:', error);
       throw new Error(`Erreur de connexion: ${error.message}`);
     }
   }
@@ -69,7 +68,6 @@ class CharacterService {
   }
 }
 
-// Validation des données
 const validateCharacter = (character) => {
   const errors = {};
 
@@ -93,7 +91,6 @@ const validateCharacter = (character) => {
   };
 };
 
-// Composant Modal de confirmation
 const ConfirmModal = ({ isOpen, onClose, onConfirm, characterName }) => {
   if (!isOpen) return null;
 
@@ -101,7 +98,7 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, characterName }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
         <div className="flex items-center mb-4">
-          <AlertTriangle className="text-red-500 mr-3" size={24} />
+          <AlertTriangle className="text-red-600 mr-3" size={24} />
           <h3 className="text-lg font-semibold">Confirmer la suppression</h3>
         </div>
         <p className="text-gray-600 mb-6">
@@ -117,7 +114,7 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, characterName }) => {
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
           >
             Supprimer
           </button>
@@ -127,14 +124,13 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, characterName }) => {
   );
 };
 
-// Composant Toast pour les notifications
 const Toast = ({ message, type, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(onClose, 3000);
     return () => clearTimeout(timer);
   }, [onClose]);
 
-  const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+  const bgColor = type === 'success' ? 'bg-green-600' : 'bg-red-600';
 
   return (
     <div className={`fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50`}>
@@ -148,51 +144,40 @@ const Toast = ({ message, type, onClose }) => {
   );
 };
 
-// Composant Card de personnage
 const CharacterCard = ({ character, onDelete, onEdit }) => {
-  // Génération d'image placeholder basée sur le nom
-  const getPlaceholderImage = (name) => {
-    const colors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500'];
-    const colorIndex = name.length % colors.length;
-    return colors[colorIndex];
-  };
-
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      {/* Image placeholder */}
-      <div className={`h-48 ${getPlaceholderImage(character.name)} flex items-center justify-center`}>
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-gray-200">
+      <div className="h-40 bg-red-600 flex items-center justify-center">
         <div className="text-white text-center">
-          <div className="text-4xl font-bold mb-2">
+          <div className="text-3xl font-bold mb-2">
             {character.name.charAt(0).toUpperCase()}
           </div>
-          <div className="text-sm opacity-90">{character.universe}</div>
+          <div className="text-xs opacity-90">{character.universe}</div>
         </div>
       </div>
 
-      {/* Contenu de la card */}
-      <div className="p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-2">{character.name}</h3>
-        <p className="text-gray-600 mb-2">
+      <div className="p-4">
+        <h3 className="text-lg font-bold text-gray-900 mb-2">{character.name}</h3>
+        <p className="text-gray-600 mb-1 text-sm">
           <span className="font-semibold">Nom réel:</span> {character.realName}
         </p>
-        <p className="text-gray-600 mb-4">
+        <p className="text-gray-600 mb-3 text-sm">
           <span className="font-semibold">Univers:</span> {character.universe}
         </p>
 
-        {/* Boutons d'action */}
-        <div className="flex gap-2 pt-4 border-t border-gray-200">
+        <div className="flex gap-2 pt-3 border-t border-gray-200">
           <button
             onClick={() => onEdit(character)}
-            className="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-200 flex items-center justify-center gap-1"
           >
-            <Edit3 size={16} />
+            <Edit3 size={12} />
             Modifier
           </button>
           <button
             onClick={() => onDelete(character)}
-            className="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+            className="flex-1 bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-200 flex items-center justify-center gap-1"
           >
-            <Trash2 size={16} />
+            <Trash2 size={12} />
             Supprimer
           </button>
         </div>
@@ -201,7 +186,6 @@ const CharacterCard = ({ character, onDelete, onEdit }) => {
   );
 };
 
-// Composant Formulaire
 const CharacterForm = ({ character, onSubmit, onCancel, isEditing = false }) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -265,7 +249,7 @@ const CharacterForm = ({ character, onSubmit, onCancel, isEditing = false }) => 
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+    <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 sticky top-8">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-900">
           {isEditing ? 'Modifier le personnage' : 'Ajouter un nouveau personnage'}
@@ -281,7 +265,6 @@ const CharacterForm = ({ character, onSubmit, onCancel, isEditing = false }) => 
       </div>
 
       <div className="space-y-4">
-        {/* Nom du personnage */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Nom du personnage *
@@ -291,7 +274,7 @@ const CharacterForm = ({ character, onSubmit, onCancel, isEditing = false }) => 
             name="name"
             value={formData.name}
             onChange={handleInputChange}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 ${
               errors.name ? 'border-red-500' : 'border-gray-300'
             }`}
             placeholder="Ex: Spider-Man"
@@ -301,7 +284,6 @@ const CharacterForm = ({ character, onSubmit, onCancel, isEditing = false }) => 
           )}
         </div>
 
-        {/* Nom réel */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Nom réel *
@@ -311,7 +293,7 @@ const CharacterForm = ({ character, onSubmit, onCancel, isEditing = false }) => 
             name="realName"
             value={formData.realName}
             onChange={handleInputChange}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 ${
               errors.realName ? 'border-red-500' : 'border-gray-300'
             }`}
             placeholder="Ex: Peter Parker"
@@ -321,7 +303,6 @@ const CharacterForm = ({ character, onSubmit, onCancel, isEditing = false }) => 
           )}
         </div>
 
-        {/* Univers */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Univers *
@@ -330,14 +311,14 @@ const CharacterForm = ({ character, onSubmit, onCancel, isEditing = false }) => 
             name="universe"
             value={formData.universe}
             onChange={handleInputChange}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 ${
               errors.universe ? 'border-red-500' : 'border-gray-300'
             }`}
           >
             <option value="">Sélectionner un univers</option>
             <option value="Marvel">Marvel</option>
             <option value="DC">DC</option>
-            <option value="Image">Image</option>
+            <option value="Terre">Terre</option>
             <option value="Dark Horse">Dark Horse</option>
             <option value="Autre">Autre</option>
           </select>
@@ -346,12 +327,11 @@ const CharacterForm = ({ character, onSubmit, onCancel, isEditing = false }) => 
           )}
         </div>
 
-        {/* Boutons */}
         <div className="flex gap-4 pt-4">
           <button
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="flex-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white px-4 py-2 rounded-md font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+            className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-red-300 text-white px-4 py-2 rounded-md font-medium transition-colors duration-200 flex items-center justify-center gap-2"
           >
             {isSubmitting ? (
               <>
@@ -379,7 +359,6 @@ const CharacterForm = ({ character, onSubmit, onCancel, isEditing = false }) => 
   );
 };
 
-// Application principale
 function App() {
   const [characters, setCharacters] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -462,10 +441,10 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-red-900 via-gray-900 to-black flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-red-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600 text-xl">Chargement des personnages...</p>
+          <p className="mt-4 text-gray-300 text-xl">Chargement des personnages...</p>
         </div>
       </div>
     );
@@ -473,9 +452,9 @@ function App() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="text-center bg-white p-8 rounded-lg shadow-lg">
-          <div className="text-red-500 text-6xl mb-4">⚠️</div>
+      <div className="min-h-screen bg-gradient-to-br from-red-900 via-gray-900 to-black flex items-center justify-center">
+        <div className="text-center bg-white p-8 rounded-lg shadow-lg max-w-md">
+          <AlertTriangle className="mx-auto text-red-600 mb-4" size={64} />
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Erreur de connexion</h2>
           <p className="text-gray-600 mb-6">
             Impossible de se connecter au serveur. <br />
@@ -483,7 +462,7 @@ function App() {
           </p>
           <button
             onClick={loadCharacters}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md font-medium transition-colors"
+            className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-md font-medium transition-colors"
           >
             Réessayer
           </button>
@@ -493,8 +472,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Toast */}
+    <div className="min-h-screen bg-gradient-to-br from-red-900 via-gray-900 to-black">
       {toast && (
         <Toast
           message={toast.message}
@@ -503,7 +481,6 @@ function App() {
         />
       )}
 
-      {/* Modal de confirmation */}
       <ConfirmModal
         isOpen={confirmModal.isOpen}
         onClose={() => setConfirmModal({ isOpen: false, character: null })}
@@ -511,15 +488,17 @@ function App() {
         characterName={confirmModal.character?.name}
       />
 
-      {/* Header */}
-      <header className="bg-gradient-to-r from-red-600 to-red-800 text-white py-8 shadow-lg">
-        <div className="container mx-auto px-4">
-          <h1 className="text-5xl font-bold text-center mb-2">Marvel Characters</h1>
-          <p className="text-center text-red-100 text-lg">
+      <header className="bg-gradient-to-r from-red-700 to-red-900 text-white py-12 shadow-xl">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-yellow-300 to-red-300 bg-clip-text text-transparent">
+            MARVEL
+          </h1>
+          <h2 className="text-3xl font-semibold mb-2">CHARACTERS</h2>
+          <p className="text-red-100 text-lg mb-4">
             Gérez votre collection de super-héros
           </p>
-          <div className="text-center mt-4">
-            <span className="bg-red-500 bg-opacity-50 px-4 py-2 rounded-full text-sm">
+          <div className="inline-block bg-red-600 bg-opacity-50 px-6 py-2 rounded-full">
+            <span className="text-sm font-medium">
               {characters.length} personnage{characters.length !== 1 ? 's' : ''} au total
             </span>
           </div>
@@ -527,43 +506,42 @@ function App() {
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        {/* Formulaire */}
-        <CharacterForm
-          character={editingCharacter}
-          onSubmit={editingCharacter ? handleUpdateCharacter : handleAddCharacter}
-          onCancel={handleCancelEdit}
-          isEditing={!!editingCharacter}
-        />
-
-        {/* Liste des personnages */}
-        {characters.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-lg shadow-lg">
-            <div className="text-6xl mb-4">🦸‍♂️</div>
-            <h3 className="text-2xl font-bold text-gray-800 mb-2">Aucun personnage trouvé</h3>
-            <p className="text-gray-600 text-lg">
-              Ajoutez votre premier super-héros ci-dessus !
-            </p>
+        <div className="flex gap-8">
+          {/* Section Formulaire - Gauche */}
+          <div className="w-1/3">
+            <CharacterForm
+              character={editingCharacter}
+              onSubmit={editingCharacter ? handleUpdateCharacter : handleAddCharacter}
+              onCancel={handleCancelEdit}
+              isEditing={!!editingCharacter}
+            />
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {characters.map((character) => (
-              <CharacterCard
-                key={character.id}
-                character={character}
-                onDelete={handleDeleteClick}
-                onEdit={handleEditCharacter}
-              />
-            ))}
-          </div>
-        )}
-      </div>
 
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white py-6 mt-12">
-        <div className="container mx-auto px-4 text-center">
-          <p>&copy; 2024 Marvel Characters App - Géré avec React & Express</p>
+          {/* Section Cards - Droite */}
+          <div className="w-2/3">
+            {characters.length === 0 ? (
+              <div className="text-center py-16 bg-white rounded-lg shadow-lg">
+                <Users className="mx-auto text-gray-400 mb-4" size={64} />
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">Aucun personnage trouvé</h3>
+                <p className="text-gray-600 text-lg">
+                  Ajoutez votre premier super-héros !
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {characters.map((character) => (
+                  <CharacterCard
+                    key={character.id}
+                    character={character}
+                    onDelete={handleDeleteClick}
+                    onEdit={handleEditCharacter}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      </footer>
+      </div>
     </div>
   );
 }
