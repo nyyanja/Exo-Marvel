@@ -53,6 +53,12 @@
       "name": "Ny Anja",
       "realName": "Ny",
       "universe": "Image"
+    },
+    {
+      "id": 11,
+      "name": "Batman",
+      "realName": "batman",
+      "universe": "Marvel"
     }
   ]
 }
