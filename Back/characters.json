@@ -41,24 +41,6 @@
       "name": "Hulk",
       "realName": "Bruce Banner",
       "universe": "Earth-616"
-    },
-    {
-      "id": 9,
-      "name": "Barbi",
-      "realName": "Sandra",
-      "universe": "Terre USA"
-    },
-    {
-      "id": 10,
-      "name": "Ny Anja",
-      "realName": "Ny",
-      "universe": "Image"
-    },
-    {
-      "id": 11,
-      "name": "Batman",
-      "realName": "batman",
-      "universe": "Marvel"
     }
   ]
 }
